@@ -10,7 +10,7 @@ var last_state := WebSocketPeer.STATE_CLOSED
 
 signal connected_to_server
 signal connection_closed
-signal message_received(message: Vpip install bpy==3.6.0ariant)
+signal message_received(message: Variant)
 
 
 func connect_to_url(url: String) -> int:

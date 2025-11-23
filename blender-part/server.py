@@ -80,10 +80,11 @@ def stop_server():
 def get_server_status():
     """获取服务器状态信息"""
     return {
-        'running': server_running,
-        'clients_count': len(connected_clients),
-        'loop_active': server_loop is not None
+        "running": server_running,
+        "clients_count": len(connected_clients),
+        "loop_active": server_loop is not None,
     }
+
 
 def send_message(msg):
     import asyncio
