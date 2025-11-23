@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://b2ma68sqsgqpp"]
+[gd_scene load_steps=4 format=3 uid="uid://b2ma68sqsgqpp"]
 
 [ext_resource type="Script" uid="uid://0jcqeug51q3" path="res://src/Extensions/BlenderPixelorama/blender_lorama_panel.gd" id="1_feuar"]
 [ext_resource type="Script" uid="uid://dm38falv1j75m" path="res://src/Extensions/BlenderPixelorama/WebSocketClient.gd" id="2_p2n3e"]
+[ext_resource type="Script" uid="uid://b82hyr3plwx2o" path="res://src/Extensions/BlenderPixelorama/texture_exporter.gd" id="3_l6m7u"]
 
 [node name="BlenderLorama" type="PanelContainer"]
 anchors_preset = 15
@@ -55,3 +56,7 @@ layout_mode = 2
 [node name="WebSocketClient" type="Node" parent="."]
 script = ExtResource("2_p2n3e")
 metadata/_custom_type_script = "uid://dm38falv1j75m"
+
+[node name="TextureExporter" type="Node" parent="."]
+script = ExtResource("3_l6m7u")
+metadata/_custom_type_script = "uid://b82hyr3plwx2o"

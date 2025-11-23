@@ -3,15 +3,18 @@ extends Node2D
 
 var extensions_api
 var uv_data: Dictionary = {}
-var overlay_color := Color.RED * Color(1, 1, 1, 0.7) 
+var overlay_color := Color.RED * Color(1, 1, 1, 0.7)
 var line_width: float = 1.0
 var is_enabled: bool = true
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	extensions_api = get_node_or_null("/root/ExtensionsApi")
-	z_index = 100  # 确保在内容之上
+	z_index = 100  # Ensure it's above content
 	set_process(true)
-	 
+
+
 func _draw() -> void:
 	if uv_data.is_empty():
 		return
@@ -23,7 +26,8 @@ func _draw() -> void:
 	for face in faces_data:
 		if face is Array and face.size() >= 3:
 			_draw_uv_face(face, canvas_size)
-	
+
+
 func _draw_uv_face(face: Array, canvas_size: Vector2i) -> void:
 	var points = PackedVector2Array()
 	for uv_coord in face:
@@ -43,24 +47,29 @@ func _draw_uv_face(face: Array, canvas_size: Vector2i) -> void:
 			points.append(next_point)
 			if not points.is_empty():
 				draw_multiline(points, overlay_color)
-		
+
+
 func set_uv_data(data: Dictionary) -> void:
 	uv_data = data
 	queue_redraw()
-	
+
+
 func set_overlay_color(color: Color) -> void:
 	overlay_color = color
 	queue_redraw()
-	
+
+
 func set_line_width(width: float) -> void:
 	line_width = width
 	queue_redraw()
-	
+
+
 func set_enabled(enabled: bool) -> void:
 	is_enabled = enabled
 	visible = enabled
 	queue_redraw()
-	
+
+
 func clear_uv_overlay() -> void:
 	uv_data.clear()
 	queue_redraw()
