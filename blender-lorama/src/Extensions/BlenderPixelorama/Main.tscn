@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxb33oecndpan"]
+
+[ext_resource type="Script" uid="uid://b3gj8yn3mwg1f" path="res://src/Extensions/BlenderPixelorama/Main.gd" id="1_k0u8q"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_k0u8q")

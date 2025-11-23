@@ -1,0 +1,14 @@
+{
+	"name": "BlenderPixelorama",
+	"display_name": "BlenderPixelorama",
+	"description": "Sync Texture to Blender",
+	"author": "yuchenyang1994",
+	"version": "0.1",
+	"supported_api_versions": [
+		8
+	],
+	"license": "MIT",
+	"nodes": [
+		"Main.tscn"
+	]
+}
