@@ -23,10 +23,10 @@ class SERVER_OT_stop(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        # 确保在正确的上下文中可用
-        return True  # 或者你的条件检查
+        # Ensure availability in correct context
+        return True  # or your condition check
 
     def execute(self, context):
-        self.report({"INFO"}, "Server stoped")
+        self.report({"INFO"}, "Server stopped")
         server.stop_server()
         return {"FINISHED"}

@@ -5,7 +5,7 @@ from .server import get_server_status
 
 class WS_PT_Panel(bpy.types.Panel):
     bl_label = "SyncServer"
-    bl_category = "PixeloramaSync"  # 右侧标签栏名字
+    bl_category = "PixeloramaSync"  # Right sidebar tab name
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
 

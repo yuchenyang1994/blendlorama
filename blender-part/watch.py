@@ -25,10 +25,10 @@ class UvWatch:
             new_hash = get_fast_hash()
             print(f"hello, perfcheck{time() - t}")
             print("hashing func", new_hash, self.last_hash)
-            # 获取服务器状态
+            # Get server status
             status = get_server_status()
             print(new_hash, self.last_hash)
-            print(new_hash != self.last_hash)
+            print("hash:", new_hash != self.last_hash)
             if (
                 new_hash != self.last_hash
                 and status["running"]
@@ -44,7 +44,7 @@ class UvWatch:
                         "requestId": -1,
                     }
                 )
-            self.last_hash = new_hash
+                self.last_hash = new_hash
         finally:
             ImageManager.UPDATING_IMAGE.release()
             print(interval)
@@ -75,7 +75,7 @@ class ImagesStateWatch:
 
         new_hash = hash(frozenset(data))
 
-        # 获取服务器状态
+        # Get server status
         status = get_server_status()
         if (
             new_hash != self.last_hash

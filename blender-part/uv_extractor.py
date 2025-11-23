@@ -1891,18 +1891,26 @@ def get_fast_hash():
     selected_objects = set(bpy.context.view_layer.objects.selected)
     if bpy.context.view_layer.objects.active is not None:
         selected_objects.add(bpy.context.view_layer.objects.active)
+
+    print(f"DEBUG: Selected objects: {[o.name for o in selected_objects]}")
+    print(
+        f"DEBUG: Active object: {bpy.context.view_layer.objects.active.name if bpy.context.view_layer.objects.active else None}"
+    )
+
     t = time()
     for o in selected_objects:
         raw_str += o.name
         mode = o.mode
+        print(f"DEBUG: Object '{o.name}' mode: {mode}")
+
         if not (
             hasattr(o.data, "uv_layers")
             and hasattr(o.data.uv_layers, "active")
             and o.data.uv_layers.active
         ):
-            print("does not have UV data.")
+            print("DEBUG: does not have UV data.")
             continue
-        print(mode)
+
         bm = None
         data_copy = o.data.copy()
         bm = bmesh.new()
@@ -1914,27 +1922,47 @@ def get_fast_hash():
             bm.faces.ensure_lookup_table()
 
             if not bm.loops.layers.uv:
+                print(f"DEBUG: No UV layers on object '{o.name}'")
                 continue
             uv_layer = bm.loops.layers.uv.verify()
 
+            # Get all faces (regardless of selection state) for debugging
+            all_faces = list(bm.faces)
             selected_faces = [f for f in bm.faces if f.select]
-            raw_str += str(len(selected_faces))
-            uv_sum = 0.1235435
 
-            for f in islice(selected_faces, 0, 400, 1):
-                for u in f.loops:
-                    uv_sum += u[uv_layer].uv[0] + 1 - u[uv_layer].uv[1]
+            print(
+                f"DEBUG: Object '{o.name}' - Total faces: {len(all_faces)}, Selected faces: {len(selected_faces)}"
+            )
 
-            for f in islice(selected_faces, 400, 100000, 20):
+            # For more stable hashing, use all face information instead of just selected faces
+            face_data = []
+            for i, f in enumerate(all_faces):
+                face_uvs = []
                 for u in f.loops:
-                    uv_sum += u[uv_layer].uv[0] + 1 - u[uv_layer].uv[1]
-            raw_str += str(uv_sum)
+                    uv = u[uv_layer].uv
+                    # Use higher precision and more variation
+                    face_uvs.extend([round(uv[0], 6), round(uv[1], 6)])
+
+                # Include face index and selection state
+                face_data.append((i, f.select, tuple(face_uvs)))
+
+            raw_str += str(mode)  # Add mode
+            raw_str += str(len(all_faces))  # Total face count
+            raw_str += str(len(selected_faces))  # Selected face count
+            raw_str += str(tuple(face_data))  # UV data of all faces
+
+            print(
+                f"DEBUG: Added data for '{o.name}': mode={mode}, total_faces={len(all_faces)}, selected_faces={len(selected_faces)}"
+            )
 
         except Exception as e:
+            print(f"DEBUG: Error processing object '{o.name}': {e}")
             print(e, "\n", traceback.print_exc())
             print(e)
         finally:
             bm.free()
             bpy.data.meshes.remove(data_copy)
 
-    return hash(raw_str)
+    result_hash = hash(raw_str)
+    print(f"DEBUG: Final raw string length: {len(raw_str)}, Hash: {result_hash}")
+    return result_hash

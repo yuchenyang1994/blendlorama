@@ -27,18 +27,30 @@ layout_mode = 2
 text = "Status: Disconnected"
 horizontal_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 16
+alignment = 1
 
-[node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Connect"
 
-[node name="DisconnectButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="DisconnectButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Disconnect"
+
+[node name="EnableContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/EnableContainer"]
+layout_mode = 2
+text = "Switch UV Overlay"
+
+[node name="SwitchUvOverlay" type="CheckButton" parent="MarginContainer/VBoxContainer/EnableContainer"]
+layout_mode = 2
 
 [node name="WebSocketClient" type="Node" parent="."]
 script = ExtResource("2_p2n3e")
