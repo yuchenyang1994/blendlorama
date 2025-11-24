@@ -53,6 +53,7 @@ text = "Show UV Overlay"
 
 [node name="SwitchUvOverlay" type="CheckButton" parent="MarginContainer/VBoxContainer/EnableContainer"]
 layout_mode = 2
+button_pressed = true
 
 [node name="ImageListContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(16, 0)

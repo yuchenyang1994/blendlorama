@@ -21,7 +21,9 @@ func _ready() -> void:
 	uv_overlay = UVOverlay.new()
 	if canvas:
 		canvas.previews.add_child(uv_overlay)
+	
 	current_project = extensions_api.project.current_project
+	uv_overlay_enable_button.set_pressed_no_signal(true)
 
 	# Connect to texture changed signal instead of using timer
 	if extensions_api and extensions_api.signals:

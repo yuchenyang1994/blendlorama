@@ -10,14 +10,20 @@ _dependencies_installed = False
 def are_dependencies_installed():
     """Check if all dependencies are installed."""
     global _dependencies_installed
+
+    # First check cache
     if _dependencies_installed:
+        print("Dependencies cached as installed")
         return True
 
+    # Then check actual import
     try:
         importlib.import_module("websockets")
         _dependencies_installed = True
+        print("Dependencies verified as installed")
         return True
-    except ImportError:
+    except ImportError as e:
+        print(f"Dependencies not installed: {e}")
         return False
 
 
@@ -55,6 +61,12 @@ def get_websocket_wheel_path():
 def install_dependencies():
     """Install missing dependencies using local wheel files or pip fallback."""
     global _dependencies_installed
+
+    # Check if dependencies are already installed
+    if are_dependencies_installed():
+        print("Dependencies already installed, skipping...")
+        return True
+
     try:
         python_exe = sys.executable
 
@@ -76,7 +88,6 @@ def install_dependencies():
                         "install",
                         wheel_path,
                         "--no-deps",
-                        "--force-reinstall",
                     ]
                 )
                 print("Successfully installed from local wheel file")
