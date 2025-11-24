@@ -53,44 +53,66 @@ def get_websocket_wheel_path():
 
 
 def install_dependencies():
-    """Install missing dependencies using local wheel files."""
+    """Install missing dependencies using local wheel files or pip fallback."""
+    global _dependencies_installed
     try:
         python_exe = sys.executable
 
         # Get the appropriate wheel file
         wheel_path = get_websocket_wheel_path()
-        if not wheel_path:
-            print(
-                f"Error: Could not find appropriate websockets wheel for {platform.system()} {platform.machine()}"
-            )
-            return False
+        if wheel_path:
+            print(f"Attempting to install websockets from local wheel: {wheel_path}")
 
-        print(f"Installing websockets from: {wheel_path}")
+            try:
+                # Ensure pip is available
+                subprocess.check_call([python_exe, "-m", "ensurepip"])
+
+                # Try to install from local wheel file first
+                subprocess.check_call(
+                    [
+                        python_exe,
+                        "-m",
+                        "pip",
+                        "install",
+                        wheel_path,
+                        "--no-deps",
+                        "--force-reinstall",
+                    ]
+                )
+                print("Successfully installed from local wheel file")
+
+                # After installation, re-check
+                importlib.invalidate_caches()
+                importlib.import_module("websockets")
+                _dependencies_installed = True
+                return True
+
+            except subprocess.CalledProcessError as wheel_err:
+                print(f"Failed to install from local wheel: {wheel_err}")
+                print("Falling back to pip installation...")
+        else:
+            print("No suitable local wheel file found, using pip installation...")
+
+        # Fallback: Install using pip from PyPI
+        print("Installing websockets from PyPI...")
 
         # Ensure pip is available
         subprocess.check_call([python_exe, "-m", "ensurepip"])
 
-        # Install websockets from local wheel file
+        # Install websockets from PyPI
         subprocess.check_call(
-            [
-                python_exe,
-                "-m",
-                "pip",
-                "install",
-                wheel_path,
-                "--no-deps",
-                "--force-reinstall",
-            ]
+            [python_exe, "-m", "pip", "install", "websockets>=15.0.1"]
         )
 
         # After installation, re-check
-        global _dependencies_installed
         importlib.invalidate_caches()
         importlib.import_module("websockets")
         _dependencies_installed = True
+        print("Successfully installed websockets from PyPI")
 
         return True
 
     except (subprocess.CalledProcessError, ImportError) as err:
         print(f"Error installing dependencies: {err}")
+        print("Note: You may need to install websockets manually:")
         return False
