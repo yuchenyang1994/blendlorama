@@ -32,11 +32,19 @@ async def ws_handler(websocket):
 
                 # Specific message handling logic can be added here
                 # For now, keep simple echo
-                await websocket.send(json.dumps({"type": "echo", "original": message}))
+                match msg_data.get("type", "UV_SYNC"):
+                    case "UV_SYNC":
+                        pass
+                    case _:
+                        await websocket.send(
+                            json.dumps(
+                                {"type": "error", "message": "Unknown message type"}
+                            )
+                        )
 
             except json.JSONDecodeError:
                 # If not JSON, echo directly
-                await websocket.send(f"Echo: {message}")
+                await websocket.send("Echo: eco")
 
     except websockets.exceptions.ConnectionClosed as e:
         print(f"Client {client_info} disconnected - Code: {e.code}, Reason: {e.reason}")
