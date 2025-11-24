@@ -1,4 +1,4 @@
-# Blender Pixel Sync
+# blender-Lorama
 
 <img src="./logo.png" width="50%" alt="Blender-Aseprite Bridge Logo">
 
@@ -13,6 +13,7 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 ## Features
 
 ### Blender Addon (`blender-part/`)
+
 - **WebSocket Server**: Real-time communication server for data synchronization
 - **Pixel-Perfect UV Unwrapping**: Specialized UV unwrapping algorithms for pixel art
 - **Texture Management**: Automatic texture detection, loading, and management
@@ -22,6 +23,7 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 - **Checker Texture Generation**: Create checker patterns for texture testing
 
 ### Pixelorama Extension (`blender-lorama/`)
+
 - **WebSocket Client**: Connects to Blender's WebSocket server
 - **UV Overlay**: Visual overlay showing Blender UV layouts in Pixelorama
 - **Texture Export**: Export modified textures back to Blender
@@ -51,11 +53,13 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 ### Setting up the Workflow
 
 1. **Start the Blender Server**:
+
    - In Blender, open the Image Editor
    - Go to the "Pixelorama Sync" panel (Image Editor > UI Panel > Pixelorama Sync)
    - Click "Start Server" to begin the WebSocket server
 
 2. **Connect from Pixelorama**:
+
    - In Pixelorama, the Blender Pixel Sync panel will appear as a new tab
    - The extension will automatically attempt to connect to Blender
    - Connection status will be displayed in the panel
@@ -68,11 +72,13 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 ### Working with Textures
 
 1. **Export UV Layout**:
+
    - Select your object in Blender
    - Use the UV tools to export the layout to Pixelorama
    - The UV layout will appear as an overlay in Pixelorama
 
 2. **Create/Edit Textures**:
+
    - Design your pixel art texture in Pixelorama
    - Use the UV overlay as a guide for precise placement
    - The grid setup ensures pixel-perfect alignment
@@ -85,11 +91,13 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 ### Recommended Workflow
 
 1. **Model Setup**:
+
    - Create your low-poly model in Blender
    - Use the "Setup World Grid" tool for proper pixel art scaling
    - Set grid subdivisions based on your pixel density requirements
 
 2. **UV Unwrapping**:
+
    - Use "Pixel Perfect Unwrap" for clean, pixel-aligned UVs
    - Or use "Unwrap to Grid" for grid-based UV layouts
    - Check UVs in the UV Editor for proper alignment
@@ -97,7 +105,6 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 3. **Texture Creation**:
    - Export UV layout to Pixelorama
    - Create pixel art texture following the UV guides
-   
 4. **Final Integration**:
    - Export texture back to Blender
    - Apply to model and test in 3D view
@@ -108,21 +115,25 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 The Blender addon provides several panels:
 
 ### Server Panel
+
 - **Start/Stop Server**: Control the WebSocket server
 - **Connection Status**: Shows connected clients and server status
 - **Port Information**: Display server connection details
 
 ### UV Tools Panel
+
 - **Pixel Perfect Unwrap**: Unwrap UVs with pixel-perfect precision
 - **Unwrap to Grid**: Create grid-based UV layouts
 - **Export UV**: Send UV data to Pixelorama
 
 ### Texture Tools Panel
+
 - **Check Texture**: Validate texture dimensions and format
 - **Create Checker**: Generate checker pattern textures
 - **Reload Textures**: Refresh textures from disk
 
 ### World Grid Panel
+
 - **Setup World Grid**: Configure Blender's grid for pixel art
 - **Grid Subdivisions**: Adjust grid density
 - **Scale Settings**: Set appropriate scale for pixel work
@@ -130,32 +141,38 @@ The Blender addon provides several panels:
 ## Compatibility
 
 ### Blender
+
 - **Version**: Blender 4.5.0 and later
 - **Platform**: Windows, macOS, Linux
 
 ### Pixelorama
+
 - **Version**: Supports Pixelorama API version 8
 - **Platform**: Windows, macOS, Linux
 
 ## Technical Details
 
 ### Communication Protocol
+
 - **WebSocket**: Real-time bidirectional communication
 - **JSON Message Format**: Structured data exchange
 - **Event-Driven**: Automatic updates on changes
 
 ### Supported Features
+
 - **Image Formats**: PNG, JPG, BMP, and other Blender-supported formats
 - **UV Coordinates**: Full UV map synchronization
 
 ## Dependencies
 
 ### Blender Addon Dependencies
+
 - `websockets` library (automatically installed by the addon)
 - Blender 4.5.0 or later
 - NumPy (included with Blender)
 
 ### Pixelorama Extension Dependencies
+
 - Pixelorama with extension support
 - Godot Engine (Pixelorama runtime)
 
@@ -195,6 +212,7 @@ blender-pixel-sync/
 Contributions are welcome! Please feel free to submit pull requests, report bugs, or suggest features.
 
 ### Development Setup
+
 1. Clone the repository
 2. For Blender development: Use Blender's scripting environment
 3. For Pixelorama development: Use Godot Engine with Pixelorama source
@@ -214,6 +232,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For issues, questions, or support:
+
 1. Check the GitHub issues page
 2. Review the documentation for common solutions
 3. Provide Blender and Pixelorama versions when reporting issues
@@ -221,6 +240,7 @@ For issues, questions, or support:
 ## Version History
 
 ### v0.1.0
+
 - Initial release
 - Basic WebSocket communication
 - UV export/import functionality
