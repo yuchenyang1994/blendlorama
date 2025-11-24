@@ -34,19 +34,17 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 
 ### Blender Addon Installation
 
-1. Download or clone this repository
+1. Download the pre-packaged zip file
 2. In Blender, go to `Edit > Preferences > Add-ons`
-3. Click "Install..." and navigate to the `blender-part` directory
-4. Select the folder (not individual files) and install
-5. Enable the "Pixelorama Sync" addon
+3. Click "Install..." and select the zip file
+4. Enable the "Pixelorama Sync" addon
 
 ### Pixelorama Extension Installation
 
 1. Open Pixelorama
-2. Go to `Extensions > Manage Extensions`
-3. Click "Import from file" and navigate to the `blender-lorama/src/Extensions/BlenderPixelorama` directory
-4. Select the `extension.json` file
-5. Enable the "BlenderPixelorama" extension
+2. Go to `Preferences > Extensions > Install Extension`
+3. Select the pre-packaged `.pck` file
+4. The "BlenderPixelorama" extension will be installed automatically
 
 ## Usage
 

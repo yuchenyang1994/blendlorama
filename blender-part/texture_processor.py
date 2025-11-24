@@ -3,22 +3,24 @@ Texture processing utilities adapted from Pixel-Unwrapper.
 Provides pixel-level texture operations and check functionality.
 """
 
-import bpy
-from mathutils import Vector, Matrix
 from dataclasses import dataclass
-from typing import Tuple, Optional, List
+from typing import List, Optional, Tuple
+
+import bpy
+from mathutils import Matrix, Vector
 
 
 @dataclass(frozen=True)
 class Vector2Int:
     """Integer 2D vector for pixel coordinates."""
+
     x: int
     y: int
 
-    def offset(self, x: int, y: int) -> 'Vector2Int':
+    def offset(self, x: int, y: int) -> "Vector2Int":
         return Vector2Int(self.x + x, self.y + y)
 
-    def copy(self) -> 'Vector2Int':
+    def copy(self) -> "Vector2Int":
         return Vector2Int(self.x, self.y)
 
     def __getitem__(self, key: int) -> int:
@@ -28,13 +30,13 @@ class Vector2Int:
             return self.y
         raise IndexError(f"{key} is not a valid subscript for Vector2Int")
 
-    def __add__(self, other: 'Vector2Int') -> 'Vector2Int':
+    def __add__(self, other: "Vector2Int") -> "Vector2Int":
         return Vector2Int(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other: 'Vector2Int') -> 'Vector2Int':
+    def __sub__(self, other: "Vector2Int") -> "Vector2Int":
         return Vector2Int(self.x - other.x, self.y - other.y)
 
-    def __neg__(self) -> 'Vector2Int':
+    def __neg__(self) -> "Vector2Int":
         return Vector2Int(-self.x, -self.y)
 
     def __truediv__(self, other: float) -> Vector:
@@ -52,13 +54,14 @@ class Vector2Int:
     def __hash__(self) -> int:
         return hash((self.x, self.y))
 
-    def __eq__(self, other: 'Vector2Int') -> bool:
+    def __eq__(self, other: "Vector2Int") -> bool:
         return self.x == other.x and self.y == other.y
 
 
 @dataclass
 class RectInt:
     """Integer rectangle for pixel regions."""
+
     min: Vector2Int
     max: Vector2Int
 
@@ -93,9 +96,9 @@ class PixelArray:
             self.width = blender_image.size[0]
             self.height = blender_image.size[1]
             self.pixels = list(blender_image.pixels[:])
-            assert (
-                len(self.pixels) == self.width * self.height * 4
-            ), "Pixels array is not the right size"
+            assert len(self.pixels) == self.width * self.height * 4, (
+                "Pixels array is not the right size"
+            )
         elif size is not None:
             # Create a default checkerboard pattern
             self.width = self.height = size
@@ -116,7 +119,7 @@ class PixelArray:
         x = x % self.width
         y = y % self.height
         idx = (y * self.width + x) * 4
-        return tuple(self.pixels[idx:idx + 4])
+        return tuple(self.pixels[idx : idx + 4])
 
     def set_pixel(self, x: int, y: int, pix: Tuple[float, float, float, float]) -> None:
         """Set pixel RGBA values with wrap mode."""
@@ -124,11 +127,11 @@ class PixelArray:
         y = y % self.height
         idx = (y * self.width + x) * 4
         assert len(pix) == 4
-        self.pixels[idx:idx + 4] = pix
+        self.pixels[idx : idx + 4] = pix
 
     def copy_region(
         self,
-        source: 'PixelArray',
+        source: "PixelArray",
         src_pos: Vector2Int,
         size: Vector2Int,
         dst_pos: Vector2Int,
@@ -146,7 +149,7 @@ class PixelArray:
 
     def copy_region_transformed(
         self,
-        source: 'PixelArray',
+        source: "PixelArray",
         src_rect: RectInt,
         transform: Matrix,
     ) -> None:
@@ -171,7 +174,8 @@ class PixelArray:
         br = transform @ br
 
         # Find the destination bounds and clamp to image size
-        from math import floor, ceil
+        from math import ceil, floor
+
         dst_min_x = max(0, floor(min(bl.x, br.x, tl.x, tr.x)))
         dst_min_y = max(0, floor(min(bl.y, br.y, tl.y, tr.y)))
         dst_max_x = min(self.width, ceil(max(bl.x, br.x, tl.x, tr.x)))
@@ -187,9 +191,9 @@ class PixelArray:
                 pix = source.get_pixel(floor(src_point.x), floor(src_point.y))
                 self.set_pixel(x, y, pix)
 
-        assert (
-            len(self.pixels) == original_pixels_len
-        ), f"Pixel Array was resized (from {original_pixels_len} to {len(self.pixels)})"
+        assert len(self.pixels) == original_pixels_len, (
+            f"Pixel Array was resized (from {original_pixels_len} to {len(self.pixels)})"
+        )
 
 
 class TextureProcessor:
@@ -209,7 +213,7 @@ class TextureProcessor:
             "size": image.size,
             "channels": image.channels,
             "is_dirty": image.is_dirty,
-            "issues": []
+            "issues": [],
         }
 
         # Check for common issues
@@ -236,9 +240,13 @@ class TextureProcessor:
 
             transparency_ratio = transparent_pixels / total_pixels
             if transparency_ratio > 0.95:
-                report["issues"].append(f"Image is almost entirely transparent ({transparency_ratio:.1%})")
+                report["issues"].append(
+                    f"Image is almost entirely transparent ({transparency_ratio:.1%})"
+                )
             elif transparency_ratio < 0.01:
-                report["issues"].append(f"Image has almost no transparency ({transparency_ratio:.1%})")
+                report["issues"].append(
+                    f"Image has almost no transparency ({transparency_ratio:.1%})"
+                )
 
         except Exception as e:
             report["issues"].append(f"Failed to analyze pixels: {str(e)}")
@@ -246,7 +254,9 @@ class TextureProcessor:
         return report
 
     @staticmethod
-    def create_checkerboard_texture(size: int = 64, name: str = "CheckTexture") -> bpy.types.Image:
+    def create_checkerboard_texture(
+        size: int = 64, name: str = "CheckTexture"
+    ) -> bpy.types.Image:
         """
         Create a pixel-perfect checkerboard texture based on Pixel-Unwrapper with real colors.
         """
@@ -260,12 +270,11 @@ class TextureProcessor:
             top = (row % 16) < 8
             light = (row + col) % 2 == 0
 
-            # Define 4 corner colors (from Pixel-Unwrapper scene properties)
-            # Using nice distinguishable colors
-            col_tl = [1.0, 0.5, 0.0, 1.0]  # Orange top-left
-            col_tr = [0.0, 0.5, 1.0, 1.0]  # Blue top-right
-            col_bl = [0.5, 1.0, 0.0, 1.0]  # Green bottom-left
-            col_br = [1.0, 0.0, 0.5, 1.0]  # Pink bottom-right
+            # Define 4 corner colors with much lower brightness for better UV editor visibility
+            col_tl = [0.35, 0.28, 0.2, 1.0]  # Dark orange-brown top-left
+            col_tr = [0.2, 0.28, 0.35, 1.0]  # Dark blue-gray top-right
+            col_bl = [0.25, 0.32, 0.2, 1.0]  # Dark olive green bottom-left
+            col_br = [0.35, 0.2, 0.28, 1.0]  # Dark dusty rose bottom-right
 
             if left:
                 if top:
@@ -278,9 +287,11 @@ class TextureProcessor:
                 else:
                     col_val = col_br
 
-            # Create subtle variation for pixel-level distinction
+            # Create subtle variation for pixel-level distinction with minimal contrast
             if not light:
-                col_val = [c * 0.7 for c in col_val]
+                col_val = [
+                    c * 0.85 for c in col_val
+                ]  # Further reduced for even lower contrast
                 col_val[3] = 1.0  # Keep alpha at 1.0
 
             pixels.extend(col_val)
@@ -302,7 +313,7 @@ class TextureProcessor:
         texture: bpy.types.Image,
         src_pos: Tuple[int, int],
         size: Tuple[int, int],
-        dst_pos: Tuple[int, int]
+        dst_pos: Tuple[int, int],
     ) -> bool:
         """
         Copy a region within the texture.
@@ -326,8 +337,9 @@ class TextureProcessor:
             return False
 
     @staticmethod
-    def validate_texture_coordinates(uv_coords: List[Tuple[float, float]],
-                                   texture_size: Tuple[int, int]) -> dict:
+    def validate_texture_coordinates(
+        uv_coords: List[Tuple[float, float]], texture_size: Tuple[int, int]
+    ) -> dict:
         """
         Validate UV coordinates against texture dimensions.
         """
@@ -351,23 +363,28 @@ class TextureProcessor:
             pixel_coords.append((px, py))
 
             if px < 0 or px >= tex_width:
-                issues.append(f"UV {i}: Pixel X coordinate {px} is outside texture bounds")
+                issues.append(
+                    f"UV {i}: Pixel X coordinate {px} is outside texture bounds"
+                )
             if py < 0 or py >= tex_height:
-                issues.append(f"UV {i}: Pixel Y coordinate {py} is outside texture bounds")
+                issues.append(
+                    f"UV {i}: Pixel Y coordinate {py} is outside texture bounds"
+                )
 
         return {
             "status": "success" if not issues else "warning",
             "issues": issues,
-            "pixel_coordinates": pixel_coords
+            "pixel_coordinates": pixel_coords,
         }
 
 
 # Blender operator for texture checking
 class TEXTURE_OT_check_texture(bpy.types.Operator):
     """Check texture for issues and integrity"""
+
     bl_idname = "texture.check_texture"
     bl_label = "Check Texture"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         # Get active image from image editor or material
@@ -375,30 +392,34 @@ class TEXTURE_OT_check_texture(bpy.types.Operator):
 
         # Try to get image from active image editor
         for area in context.screen.areas:
-            if area.type == 'IMAGE_EDITOR':
+            if area.type == "IMAGE_EDITOR":
                 if area.spaces.active.image:
                     image = area.spaces.active.image
                     break
 
         # If no image in editor, try to get from material
-        if not image and context.active_object and context.active_object.active_material:
+        if (
+            not image
+            and context.active_object
+            and context.active_object.active_material
+        ):
             material = context.active_object.active_material
             if material.use_nodes:
                 for node in material.node_tree.nodes:
-                    if node.type == 'TEX_IMAGE' and node.image:
+                    if node.type == "TEX_IMAGE" and node.image:
                         image = node.image
                         break
 
         if not image:
-            self.report({'ERROR'}, "No image found to check")
-            return {'CANCELLED'}
+            self.report({"ERROR"}, "No image found to check")
+            return {"CANCELLED"}
 
         # Perform texture check
         report = TextureProcessor.check_texture_integrity(image)
 
         # Display results
         if report["status"] == "error":
-            self.report({'ERROR'}, report.get("message", "Unknown error"))
+            self.report({"ERROR"}, report.get("message", "Unknown error"))
         else:
             message = f"Texture '{report['image_name']}' ({report['size'][0]}x{report['size'][1]})"
             if report["issues"]:
@@ -408,32 +429,32 @@ class TEXTURE_OT_check_texture(bpy.types.Operator):
             else:
                 message += " - No issues found"
 
-            self.report({'INFO'}, message)
+            self.report({"INFO"}, message)
 
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 class TEXTURE_OT_create_checker_texture(bpy.types.Operator):
     """Create and apply pixel-perfect checker texture to selected object"""
+
     bl_idname = "texture.create_checker_texture"
     bl_label = "Create Checker Texture"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     texture_size: bpy.props.IntProperty(default=64, min=8, max=2048)
 
     def execute(self, context):
         obj = context.active_object
-        if not obj or obj.type != 'MESH':
-            self.report({'ERROR'}, "Please select a mesh object")
-            return {'CANCELLED'}
+        if not obj or obj.type != "MESH":
+            self.report({"ERROR"}, "Please select a mesh object")
+            return {"CANCELLED"}
 
         # Get texture size from scene property
         texture_size = context.scene.pixel_checker_texture_size
 
         # Create checker texture
         checker_texture = TextureProcessor.create_checkerboard_texture(
-            size=texture_size,
-            name=f"CheckerTexture_{obj.name}"
+            size=texture_size, name=f"CheckerTexture_{obj.name}"
         )
 
         # Get or create material
@@ -450,19 +471,19 @@ class TEXTURE_OT_create_checker_texture(bpy.types.Operator):
         nodes.clear()
 
         # Create nodes
-        output_node = nodes.new('ShaderNodeOutputMaterial')
-        bsdf_node = nodes.new('ShaderNodeBsdfPrincipled')
-        image_node = nodes.new('ShaderNodeTexImage')
+        output_node = nodes.new("ShaderNodeOutputMaterial")
+        bsdf_node = nodes.new("ShaderNodeBsdfPrincipled")
+        image_node = nodes.new("ShaderNodeTexImage")
 
         # Set texture
         image_node.image = checker_texture
-        image_node.interpolation = 'Closest'  # Pixel perfect
+        image_node.interpolation = "Closest"  # Pixel perfect
 
         # Connect nodes
         links = mat.node_tree.links
-        links.new(image_node.outputs['Color'], bsdf_node.inputs['Base Color'])
-        links.new(image_node.outputs['Alpha'], bsdf_node.inputs['Alpha'])
-        links.new(bsdf_node.outputs['BSDF'], output_node.inputs['Surface'])
+        links.new(image_node.outputs["Color"], bsdf_node.inputs["Base Color"])
+        links.new(image_node.outputs["Alpha"], bsdf_node.inputs["Alpha"])
+        links.new(bsdf_node.outputs["BSDF"], output_node.inputs["Surface"])
 
         # Layout nodes
         output_node.location = (300, 0)
@@ -471,12 +492,12 @@ class TEXTURE_OT_create_checker_texture(bpy.types.Operator):
 
         # Set UV editor to show the new texture
         for area in context.screen.areas:
-            if area.type == 'IMAGE_EDITOR':
+            if area.type == "IMAGE_EDITOR":
                 area.spaces.active.image = checker_texture
                 break
 
-        self.report({'INFO'}, f"Created {texture_size}x{texture_size} checker texture")
-        return {'FINISHED'}
+        self.report({"INFO"}, f"Created {texture_size}x{texture_size} checker texture")
+        return {"FINISHED"}
 
 
 # Registration is now handled by __init__.py
