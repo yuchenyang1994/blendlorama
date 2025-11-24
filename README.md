@@ -1,4 +1,4 @@
-# blender-Lorama
+# Blenderlorama
 
 <img src="./logo.png" width="50%" alt="Blender-Aseprite Bridge Logo">
 
@@ -34,16 +34,17 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 
 ### Blender Addon Installation
 
-1. Download the pre-packaged zip file
+1. Download the blender-part file
 2. In Blender, go to `Edit > Preferences > Add-ons`
 3. Click "Install..." and select the zip file
 4. Enable the "Pixelorama Sync" addon
 
 ### Pixelorama Extension Installation
 
-1. Open Pixelorama
-2. Go to `Preferences > Extensions > Install Extension`
-3. Select the pre-packaged `.pck` file
+1. Download the BlenderPixelorama .pck file​
+2. Open Pixelorama
+3. Go to `Preferences > Extensions > Install Extension`
+4. Select the pre-packaged `.pck` file
 4. The "BlenderPixelorama" extension will be installed automatically
 
 ## Usage

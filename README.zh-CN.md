@@ -1,4 +1,4 @@
-# Blender-Lorama
+# Blenderlorama
 
 <img src="./logo.png" width="50%" alt="Blender-Aseprite Bridge Logo">
 
@@ -32,17 +32,18 @@ Blender Pixel Sync 是一个实时同步工具，连接 Blender 和 Pixelorama�
 
 ### Blender 插件安装
 
-1. 下载预打包的 zip 文件
+1. 下载预打包的 `blender-part.zip` 文件
 2. 在 Blender 中，转到 `编辑 > 偏好设置 > 插件`
 3. 点击"安装..."并选择 zip 文件
 4. 启用"Pixelorama Sync"插件
 
 ### Pixelorama 扩展安装
 
-1. 打开 Pixelorama
-2. 转到 `首选项 > 扩展 > 安装扩展`
-3. 选择预打包的 `.pck` 文件
-4. "BlenderPixelorama" 扩展将自动安装
+1. 下载 `BlenderPixelorama.pck` 文件
+2. 打开 Pixelorama
+3. 转到 `首选项 > 扩展 > 安装扩展`
+4. 选择预打包的 `.pck` 文件
+5. "BlenderPixelorama" 扩展将自动安装
 
 ## 使用方法
 
