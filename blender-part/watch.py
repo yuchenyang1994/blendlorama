@@ -61,11 +61,15 @@ class ImagesStateWatch:
     def check_for_changes(self):
         data = set()
         for image in bpy.data.images:
+            # Skip special image types that shouldn't be monitored
+            if image.type in ["RENDER_RESULT", "COMPOSITING", "MULTILAYER"]:
+                continue
+
             data.add(
                 frozenset(
                     {
                         image.name,
-                        bpy.path.abspath(image.filepath),
+                        bpy.path.abspath(image.filepath) if image.filepath else "",
                         image.size[0],
                         image.size[1],
                         ImageManager.INSTANCE.IMAGE_NAME == image.name,
@@ -84,10 +88,16 @@ class ImagesStateWatch:
         ):
             data = []
             for image in bpy.data.images:
+                # Skip special image types that shouldn't be sent to clients
+                if image.type in ["RENDER_RESULT", "COMPOSITING", "MULTILAYER"]:
+                    continue
+
                 data.append(
                     {
                         "name": image.name,
-                        "path": bpy.path.abspath(image.filepath),
+                        "path": bpy.path.abspath(image.filepath)
+                        if image.filepath
+                        else "",
                         "size": [image.size[0], image.size[1]],
                     }
                 )

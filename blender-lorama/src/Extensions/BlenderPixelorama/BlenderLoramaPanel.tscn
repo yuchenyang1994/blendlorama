@@ -44,14 +44,29 @@ text = "Disconnect"
 
 [node name="EnableContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/EnableContainer"]
 layout_mode = 2
-text = "Switch UV Overlay"
+text = "Show UV Overlay"
 
 [node name="SwitchUvOverlay" type="CheckButton" parent="MarginContainer/VBoxContainer/EnableContainer"]
 layout_mode = 2
+
+[node name="ImageListContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ImageListContainer"]
+layout_mode = 2
+text = "Select Blender Image"
+
+[node name="ImageOptions" type="OptionButton" parent="MarginContainer/VBoxContainer/ImageListContainer"]
+layout_mode = 2
+alignment = 1
 
 [node name="WebSocketClient" type="Node" parent="."]
 script = ExtResource("2_p2n3e")

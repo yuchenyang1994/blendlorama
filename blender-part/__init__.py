@@ -9,6 +9,7 @@ bl_info = {
 }
 import bpy
 
+from .blender_integration import setup_blender_integration
 from .image_manager import ImageManager
 from .operators import SERVER_OT_start, SERVER_OT_stop
 from .server import stop_server
@@ -23,6 +24,9 @@ deps.install_dependencies()
 
 
 def register():
+    # Set up Blender-WebSocket integration
+    setup_blender_integration()
+    ImageManager()
     UvWatch()
     ImagesStateWatch()
     bpy.app.timers.register(

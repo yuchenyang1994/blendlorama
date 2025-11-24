@@ -25,7 +25,7 @@ func connect_to_url(url: String) -> int:
 	return OK
 
 
-func send(message: String) -> int:
+func send(message) -> int:
 	if typeof(message) == TYPE_STRING:
 		return socket.send_text(message)
 	return socket.send(var_to_bytes(message))

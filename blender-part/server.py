@@ -12,6 +12,11 @@ server_running = False
 stop_event = None
 websocket_server = None
 
+# Callback for Blender integration (called from Blender's main thread)
+on_client_connected_callback = None
+on_client_disconnected_callback = None
+on_message_received_callback = None
+
 
 async def ws_handler(websocket):
     # Add client to connection list
@@ -23,6 +28,18 @@ async def ws_handler(websocket):
         # Set up ping/pong heartbeat to keep connection alive
         await websocket.ping()
 
+        # Send welcome message to newly connected client
+        welcome_msg = {
+            "type": "welcome",
+            "message": "Connected to Blender Pixel Sync Server",
+            "client_id": f"{client_info}",
+        }
+        await websocket.send(json.dumps(welcome_msg))
+
+        # Trigger Blender callback if set
+        if on_client_connected_callback:
+            on_client_connected_callback(client_info, websocket)
+
         async for message in websocket:
             print(f"Received from client {client_info}: {message}")
             try:
@@ -32,15 +49,8 @@ async def ws_handler(websocket):
 
                 # Specific message handling logic can be added here
                 # For now, keep simple echo
-                match msg_data.get("type", "UV_SYNC"):
-                    case "UV_SYNC":
-                        pass
-                    case _:
-                        await websocket.send(
-                            json.dumps(
-                                {"type": "error", "message": "Unknown message type"}
-                            )
-                        )
+                if on_message_received_callback:
+                    on_message_received_callback(client_info, msg_data)
 
             except json.JSONDecodeError:
                 # If not JSON, echo directly
@@ -48,10 +58,6 @@ async def ws_handler(websocket):
 
     except websockets.exceptions.ConnectionClosed as e:
         print(f"Client {client_info} disconnected - Code: {e.code}, Reason: {e.reason}")
-    except websockets.exceptions.ConnectionClosedError as e:
-        print(
-            f"Client {client_info} connection error - Code: {e.code}, Reason: {e.reason}"
-        )
     except Exception as e:
         print(f"Unexpected error with client {client_info}: {e}")
         print(f"Full traceback: {traceback.format_exc()}")
@@ -138,6 +144,17 @@ def get_server_status():
     }
 
 
+def set_callbacks(on_connected=None, on_disconnected=None, on_message=None):
+    """Set callback functions for Blender integration"""
+    global \
+        on_client_connected_callback, \
+        on_client_disconnected_callback, \
+        on_message_received_callback
+    on_client_connected_callback = on_connected
+    on_client_disconnected_callback = on_disconnected
+    on_message_received_callback = on_message
+
+
 def send_message(msg):
     if server_loop is None:
         print("Server not running - cannot send message")
@@ -159,11 +176,6 @@ def send_message(msg):
             except websockets.exceptions.ConnectionClosed as e:
                 print(
                     f"Client {ws.remote_address[0]}:{ws.remote_address[1]} connection closed during send - Code: {e.code}"
-                )
-                dead_clients.add(ws)
-            except websockets.exceptions.ConnectionClosedError as e:
-                print(
-                    f"Client {ws.remote_address[0]}:{ws.remote_address[1]} connection error during send - Code: {e.code}"
                 )
                 dead_clients.add(ws)
             except Exception as e:

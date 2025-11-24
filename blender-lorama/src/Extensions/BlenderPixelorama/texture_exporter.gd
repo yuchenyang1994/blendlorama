@@ -22,7 +22,7 @@ func _ensure_export_directory():
 		dir.make_dir_recursive("tmp/blenderlorama_realtime")
 
 
-func export():
+func export(image_name):
 	if not extensions_api:
 		return
 
@@ -32,11 +32,12 @@ func export():
 	if current_hash == last_project_hash:
 		return
 	var blended_image = _create_blended_image(project, current_frame)
-	var export_path = export_temp_dir.path_join("current_frame.png")
+	var export_path = export_temp_dir.path_join("%s_current_frame.png" %image_name)
 	if blended_image.save_png(export_path) == OK:
 		last_project_hash = current_hash
 		var sync_info = {
 			"type": "SYNC_TEXTURE",
+			"image": image_name,
 			"project_size": project.size, 
 			"file_path": ProjectSettings.globalize_path(export_path)
 		}
