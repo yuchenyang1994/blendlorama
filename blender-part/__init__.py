@@ -87,6 +87,11 @@ def register():
         first_interval=0.5,
         persistent=True,
     )
+    bpy.app.timers.register(
+        function=ImageManager.INSTANCE.process_pending_updates,
+        first_interval=0.1,
+        persistent=True,
+    )
     for cls in classes:
         bpy.utils.register_class(cls)
 
@@ -99,6 +104,13 @@ def unregister():
         bpy.app.timers.unregister(UvWatch.instance.check_for_changes)
     if bpy.app.timers.is_registered(ImagesStateWatch.instance.check_for_changes):
         bpy.app.timers.unregister(ImagesStateWatch.instance.check_for_changes)
+    if ImageManager.INSTANCE and hasattr(
+        ImageManager.INSTANCE, "process_pending_updates"
+    ):
+        try:
+            bpy.app.timers.unregister(ImageManager.INSTANCE.process_pending_updates)
+        except:
+            pass
 
     # Unregister scene properties
     unregister_scene_properties()

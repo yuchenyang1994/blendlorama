@@ -25,7 +25,7 @@ func _ready() -> void:
 
 	# Connect to texture changed signal instead of using timer
 	if extensions_api and extensions_api.signals:
-		extensions_api.signals.signal_current_cel_texture_changed.connect(_on_texture_changed)
+		extensions_api.signals.signal_current_cel_texture_changed(_on_texture_changed)
 
 	connect_button.pressed.connect(on_connect_button_pressed)
 	disconnect_button.pressed.connect(on_disconnect_button_pressed)
