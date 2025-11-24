@@ -72,3 +72,4 @@ __pycache__/
 .DS_Store
 ehthumbs.db
 Thumbs.db
+# Package distribution
