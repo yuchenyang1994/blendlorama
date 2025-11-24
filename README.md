@@ -97,8 +97,7 @@ Blender Pixel Sync enables artists to work with pixel art textures in Blender wh
 3. **Texture Creation**:
    - Export UV layout to Pixelorama
    - Create pixel art texture following the UV guides
-   - Use layers and onion skinning for animation support
-
+   
 4. **Final Integration**:
    - Export texture back to Blender
    - Apply to model and test in 3D view
@@ -148,8 +147,6 @@ The Blender addon provides several panels:
 ### Supported Features
 - **Image Formats**: PNG, JPG, BMP, and other Blender-supported formats
 - **UV Coordinates**: Full UV map synchronization
-- **Texture Resolution**: Up to 2048x2048 pixels
-- **Real-time Updates**: Sub-second synchronization
 
 ## Dependencies
 
