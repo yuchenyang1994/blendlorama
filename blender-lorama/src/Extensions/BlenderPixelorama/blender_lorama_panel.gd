@@ -10,7 +10,7 @@ var extensions_api
 var uv_overlay_enable_button: CheckButton = $MarginContainer/VBoxContainer/EnableContainer/SwitchUvOverlay
 @onready var texture_exporter = $TextureExporter
 @onready var image_options: OptionButton = $MarginContainer/VBoxContainer/ImageListContainer/ImageOptions
-var current_project
+var current_select_image
 var uv_overlay: UVOverlay
 
 
@@ -22,12 +22,13 @@ func _ready() -> void:
 	if canvas:
 		canvas.previews.add_child(uv_overlay)
 	
-	current_project = extensions_api.project.current_project
+
 	uv_overlay_enable_button.set_pressed_no_signal(true)
 
 	# Connect to texture changed signal instead of using timer
 	if extensions_api and extensions_api.signals:
 		extensions_api.signals.signal_current_cel_texture_changed(_on_texture_changed)
+		extensions_api.signals.signal_project_switched(_on_project_changed)
 
 	connect_button.pressed.connect(on_connect_button_pressed)
 	disconnect_button.pressed.connect(on_disconnect_button_pressed)
@@ -60,7 +61,15 @@ func _on_overlay_toggle(toggled_on):
 	
 func _on_blender_image_selected(index):
 	var image_name = image_options.get_item_text(index)
-	current_project.name = image_name
+	current_select_image = image_name
+	
+func _on_project_changed():
+	var current_project = extensions_api.project.current_project
+	var _index = _get_image_list_index_by_name(current_project.name)
+	if _index > -1:
+		image_options.select(_index)
+	else:
+		image_options.select(0)
 	
 
 
@@ -83,8 +92,7 @@ func _handle_uv_data(uv_data):
 	
 func _handle_blender_images(image_list):
 	image_options.clear()
-	if image_list["data"]:
-		current_project.name = image_list["data"][0]["name"]
+	image_options.add_item("Please select blender image")
 	for image in image_list["data"]:
 		image_options.add_item(image["name"])
 
@@ -97,7 +105,9 @@ func _on_texture_changed():
 
 func _export_texture_now():
 	# Export texture immediately when signal is received
-	if websocket_client.socket.get_ready_state() == WebSocketPeer.STATE_OPEN and current_project:
+	var current_project = extensions_api.project.current_project
+	var same_image = current_project.name == current_select_image 
+	if websocket_client.socket.get_ready_state() == WebSocketPeer.STATE_OPEN and same_image:
 		var message = texture_exporter.export(current_project.name)
 		if message:
 			var msg = JSON.stringify(message)
@@ -112,3 +122,9 @@ func on_connect_button_pressed() -> void:
 
 func on_disconnect_button_pressed() -> void:
 	websocket_client.close()
+	
+func _get_image_list_index_by_name(name: String) -> int:
+	for i in range(image_options):
+		if image_options.get_item_text(i) == name:
+			return i
+	return -1 
