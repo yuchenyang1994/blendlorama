@@ -4,7 +4,7 @@ extends Node2D
 var extensions_api
 var uv_data: Dictionary = {}
 var overlay_color := Color.RED * Color(1, 1, 1, 0.7)
-var line_width: float = 1.0
+var line_width: float = 1
 var is_enabled: bool = true
 
 
@@ -40,13 +40,9 @@ func _draw_uv_face(face: Array, canvas_size: Vector2i) -> void:
 			var y = v * canvas_size.y
 			points.append(Vector2(x, y))
 	if points.size() >= 3:
-		for i in range(points.size()):
-			var current_point = points[i]
-			var next_point = points[(i + 1) % points.size()]
-			points.append(current_point)
-			points.append(next_point)
-			if not points.is_empty():
-				draw_multiline(points, overlay_color)
+		var poly_points = points.duplicate()
+		poly_points.append(points[0])
+		draw_polyline(poly_points, overlay_color, line_width)
 
 
 func set_uv_data(data: Dictionary) -> void:

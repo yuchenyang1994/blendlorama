@@ -30,6 +30,7 @@ def get_images():
 def on_client_connected(client_info, websocket):
     """Called when a client connects to the WebSocket server"""
     print(f"[Blender] Client connected: {client_info}")
+    get_images()
 
 
 def on_client_disconnected(client_info):

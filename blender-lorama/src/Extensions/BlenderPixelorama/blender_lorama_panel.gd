@@ -61,6 +61,8 @@ func _on_overlay_toggle(toggled_on):
 	
 func _on_blender_image_selected(index):
 	var image_name = image_options.get_item_text(index)
+	var current_project = extensions_api.project.current_project
+	current_project.name = image_name
 	current_select_image = image_name
 	
 func _on_project_changed():
