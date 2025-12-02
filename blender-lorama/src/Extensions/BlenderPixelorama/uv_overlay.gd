@@ -4,7 +4,7 @@ extends Node2D
 var extensions_api
 var uv_data: Dictionary = {}
 var overlay_color := Color.RED * Color(1, 1, 1, 0.7)
-var line_width: float = 1
+var line_width: float = 0.1
 var is_enabled: bool = true
 
 

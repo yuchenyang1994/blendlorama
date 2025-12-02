@@ -7,8 +7,11 @@ bl_info = {
     "description": "Companion to the Pixelorama Sync plugin. Provides a WebSocket server to sync UVs and textures.",
     "location": "Image Editor > UI Panel > Pixelorama Sync",
 }
-import bpy
 
+from . import deps
+deps.install_dependencies()
+
+import bpy
 from .blender_integration import setup_blender_integration
 from .image_manager import ImageManager
 from .operators import SERVER_OT_start, SERVER_OT_stop, WORLD_OT_setup_grid
@@ -40,9 +43,7 @@ classes = (
     TEXTURE_OT_create_checker_texture,
 )
 
-from . import deps
 
-deps.install_dependencies()
 
 
 def register_scene_properties():
